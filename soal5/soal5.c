@@ -53,7 +53,7 @@ int siapMandi=0;
 int jeda=0;
 pthread_t tid[7];
 char pil;
-int makanan=10;
+int makanan=0;
 void* menu(void*);
 
 void* kelaparan (void *ptr)
@@ -176,7 +176,7 @@ void* toko (void* arg){
     int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
     jumMakan = shmat(shmid, NULL, 0);
 
-    *jumMakan = 5;
+    *jumMakan = 0;
 }
 void* menu(void *arg)
 {
