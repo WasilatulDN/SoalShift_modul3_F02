@@ -50,6 +50,8 @@ void* awal (void* arg)
 
     int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
     jumMakan = shmat(shmid, NULL, 0);
+  
+    *jumMakan = 0;
 
 }
 
