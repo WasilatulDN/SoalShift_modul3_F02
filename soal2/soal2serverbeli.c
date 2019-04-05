@@ -52,7 +52,7 @@ int main(int argc, char const *argv[]) {
     int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
     stok = shmat(shmid, NULL, 0);
 
-    *stok = 10;
+    *stok = 0;
     int index=1;
 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
