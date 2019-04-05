@@ -743,7 +743,137 @@ int main()
 * Jika pil =3, maka
 * kurangSiraj = 1
 * join thread akmal dan threan siraj
+## Soal 4
+#### Pertanyaan :
+Buatlah sebuah program C dimana dapat menyimpan list proses yang sedang berjalan (ps -aux) maksimal 10 list proses. Dimana awalnya list proses disimpan dalam di 2 file ekstensi .txt yaitu  SimpanProses1.txt di direktori /home/Document/FolderProses1 dan SimpanProses2.txt di direktori /home/Document/FolderProses2 , setelah itu masing2 file di  kompres zip dengan format nama file KompresProses1.zip dan KompresProses2.zip dan file SimpanProses1.txt dan SimpanProses2.txt akan otomatis terhapus, setelah itu program akan menunggu selama 15 detik lalu program akan mengekstrak kembali file KompresProses1.zip dan KompresProses2.zip 
+Dengan Syarat : 
+Setiap list proses yang di simpan dalam masing-masing file .txt harus berjalan bersama-sama
+Ketika mengkompres masing-masing file .txt harus berjalan bersama-sama
+Ketika Mengekstrak file .zip juga harus secara bersama-sama
+Ketika Telah Selesai melakukan kompress file .zip masing-masing file, maka program akan memberi pesan “Menunggu 15 detik untuk mengekstrak kembali”
+Wajib Menggunakan Multithreading
+Boleh menggunakan system
+#### Jawaban :
+```
+#include<stdio.h>
+#include<string.h>
+#include<pthread.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
 
+pthread_t tid[4];
+int jeda=0;
+```
+* Deklarasi library thread
+* Deklarasi tid bertipe thread
+* Deklarasi jeda bertipe integer dan inisialisasi = 0
+```
+void *simpan(void *arg)
+{
+        printf("Membuat file SimpanProses1.txt\n");
+        system("ps -aux | head -10 > /home/ihdiannaja2911/Documents/FolderProses1/SimpanProses1.txt");
+        printf("Membuat file SimpanProses2.txt\n");
+        system("ps -aux | head -10 > /home/ihdiannaja2911/Documents/FolderProses2/SimpanProses2.txt");
+        jeda = 1;
+        return NULL;
+}
+```
+* Mmembuat fungsi simpan dengan parameter arg
+* Printf "Membuat file SimpanProses1.txt"
+* Melakukan system untuk membuat file SimpanProses1.txt dan berisi list proses maksimal 10 proses
+* Printf "Membuat file SimpanProses2.txt"
+* Melakukan system untuk membuat file SimpanProses2.txt dan berisi list proses maksimal 10 proses
+* Set jeda = 1
+```
+void *kompres(void *arg)
+{
+        while(jeda!=1)
+        {
+
+        }
+        printf("Membuat KompresProses1.zip\n");
+        system("zip -j /home/ihdiannaja2911/Documents/FolderProses1/KompresProses1.zip /home/ihdiannaja2911/Documents/FolderProses1/SimpanProses1.txt");
+        printf("Membuat KompresProses2.zip\n");
+        system("zip -j /home/ihdiannaja2911/Documents/FolderProses2/KompresProses2.zip /home/ihdiannaja2911/Documents/FolderProses2/SimpanProses2.txt");     
+        jeda=2;
+        return NULL;
+}
+```
+* Mmembuat fungsi kompres dengan parameter arg
+* Melaukan perulangan jika proses sebelumnya belum selesai
+* Printf "Membuat KompresProses1.zip"
+* Melakukan system untuk mengzip file SimpanProses1.txt dan menyimpannya dalam /home/ihdiannaja2911/Documents/FolderProses1/KompresProses1.zip 
+* Printf "Membuat KompresProses2.zip"
+* Melakukan system untuk mengzip file SimpanProses2.txt dan menyimpannya dalam /home/ihdiannaja2911/Documents/FolderProses1/KompresProses1.zip 
+* Set jeda = 2
+```
+void *hapus(void *arg)
+{
+        while(jeda!=2)
+        {
+
+        }
+        printf("Delete file SimpanProses1.txt\n");
+        system("rm /home/ihdiannaja2911/Documents/FolderProses1/SimpanProses1.txt");
+        printf("Delete file SimpanProses2.txt\n");
+        system("rm /home/ihdiannaja2911/Documents/FolderProses2/SimpanProses2.txt");
+        
+        jeda=3;
+        return NULL;
+}
+```
+* Mmembuat fungsi hapus dengan parameter arg
+* Melaukan perulangan jika proses sebelumnya belum selesai
+* Printf "Delete file SimpanProses1.txt"
+* Melakukan system untuk menghapus file SimpanProses1.txt  
+* Printf "Delete file SimpanProses2.txt"
+* Melakukan system untuk menghapus file SimpanProses2.txt 
+* Set jeda = 3
+```
+void *ekstrak(void *arg)
+{
+        while(jeda!=3)
+        {
+
+        }
+        printf("Menunggu 15 detik untuk mengekstrak kembali\n");
+        sleep(15);
+        
+        system("unzip /home/ihdiannaja2911/Documents/FolderProses1/KompresProses1.zip -d /home/ihdiannaja2911/Documents/FolderProses1/");
+        system("unzip /home/ihdiannaja2911/Documents/FolderProses2/KompresProses2.zip -d /home/ihdiannaja2911/Documents/FolderProses2/");
+        
+        return NULL;
+}
+```
+* Membuat fungsi ekstrak dengan parameter arg
+* Melaukan perulangan jika proses sebelumnya belum selesai
+* Printf "Menunggu 15 detik untuk mengekstrak kembali"
+* Melakukan system untuk mengunzip file KompresProses1.zip dan menyimpannya dalam /home/ihdiannaja2911/Documents/FolderProses1/
+* Melakukan system untuk mengunzip file KompresProses2.zip dan menyimpannya dalam /home/ihdiannaja2911/Documents/FolderProses2/
+```
+int main(void)
+{
+        pthread_create(&(tid[0]),NULL,simpan,NULL);
+        pthread_create(&(tid[1]),NULL,kompres,NULL);
+        pthread_create(&(tid[2]),NULL,hapus,NULL);
+        pthread_create(&(tid[3]),NULL,ekstrak,NULL);
+```
+* Membuat fungsi main 
+* Membuat 4 thread, yaitu simpan, kompres, hapus, dan ekstrak
+```
+        pthread_join(tid[0],NULL);
+        pthread_join(tid[1],NULL);
+        pthread_join(tid[2],NULL);
+        pthread_join(tid[3],NULL);
+
+        exit(0);
+        return 0;
+}
+```
+* Join tiap thread yang telah dibuat
+* Proses selesai, exit proses
 ## Soal 5
 #### Pertanyaan :
 Angga, adik Jiwang akan berulang tahun yang ke sembilan pada tanggal 6 April besok. Karena lupa menabung, Jiwang tidak mempunyai uang sepeserpun untuk membelikan Angga kado. Kamu sebagai sahabat Jiwang ingin membantu Jiwang membahagiakan adiknya sehingga kamu menawarkan bantuan membuatkan permainan komputer sederhana menggunakan program C. Jiwang sangat menyukai idemu tersebut. Berikut permainan yang Jiwang minta. 
