@@ -1325,3 +1325,116 @@ int main()
 ```
 * Melakukan thread join untuk ketujuh thread di atas
 ##### Soal 5 Jual :
+```
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <unistd.h>
+#include<stdlib.h>
+#include<termios.h>
+#include<pthread.h>
+```
+* Deklarasi library thread
+```
+static struct termios old, new;
+/* Initialize new terminal i/o settings */
+void initTermios(int echo) 
+{
+  tcgetattr(0, &old); /* grab old terminal i/o settings */
+  new = old; /* make new settings same as old settings */
+  new.c_lflag &= ~ICANON; /* disable buffered i/o */
+  if (echo) {
+      new.c_lflag |= ECHO; /* set echo mode */
+  } else {
+      new.c_lflag &= ~ECHO; /* set no echo mode */
+  }
+  tcsetattr(0, TCSANOW, &new); /* use these new terminal i/o settings now */
+}
+
+/* Restore old terminal i/o settings */
+void resetTermios(void) 
+{
+  tcsetattr(0, TCSANOW, &old);
+}
+char getch_(int echo) 
+{
+  char ch;
+  initTermios(echo);
+  ch = getchar();
+  resetTermios();
+  return ch;
+}
+
+/* Read 1 character without echo */
+char getch(void) 
+{
+  return getch_(0);
+}
+```
+* Fungsi di atas agar dapat menggunakan fungsi getch()
+```
+int *jumMakan;
+pthread_t tid[2];
+
+void* awal (void* arg)
+{
+    key_t key = 1234;
+
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    jumMakan = shmat(shmid, NULL, 0);
+  
+    *jumMakan = 0;
+
+}
+```
+* Deklarasi jumMakan bertipe integer
+* Deklarasi tid bertipe pthread_t
+* Membuat fungsi awal dengan parameter arg
+* Di dalam fungsi awal berisi perintah untuk shared memory
+```
+void* menutoko (void* arg)
+{
+    while(1)
+    {
+        system("clear");
+        printf("Shop\n");
+        printf("Food Stock : %d\n",*jumMakan);
+        printf("Choice : \n");
+        printf("1. Restock\n");
+        printf("2. Exit\n");
+        sleep(1);
+    }
+
+}
+```
+* Membuat fungsi menutoko dengan parameter arg
+* Melakukan while true
+* Printf hal yang dibutuhkan untuk shop
+* Pause selama 1 detik
+```
+void main()
+{
+    pthread_create(&(tid[0]),NULL,awal,NULL);
+    pthread_create(&(tid[1]),NULL,menutoko,NULL);
+    char pil;
+    while(1)
+    {
+        pil=getch();
+        if(pil=='1')
+        {
+            *jumMakan = *jumMakan + 1;
+        }
+        else if(pil=='2')
+        {
+            break;
+        }
+    }
+}
+```
+* Membuat fungsi main
+* Mmembuat thread awal dan menutoko
+* Deklarasi variabel pil bertipe char
+* Melakukan perulangan while true
+* Jika memenuhi maka masukka input ke dalam variabel pil
+* Jika pil = 1, maka jumMakan + 1
+* Jika pil = 2, maka break
