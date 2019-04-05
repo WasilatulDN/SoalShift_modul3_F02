@@ -882,7 +882,7 @@ void* kelaparan (void *ptr)
 ```
 * Membuat fungsi kelaparan dengan parameter * ptr
 * Melakukan perulangan while true 
-* Jika memenuhi, maka melakukan erulangan kembali ketika jeda tidak samadengan 0
+* Jika memenuhi, maka melakukan erulangan kembali ketika jeda samadengan 0
 ```
         sleep(1);
         if(detikLapar==1)
@@ -927,7 +927,7 @@ void* kebersihan (void *ptr)
 ```
 * Membuat fungsi kebersihan dengan parameter * ptr
 * Melakukan perulangan while true 
-* Jika memenuhi, maka melakukan perulangan kembali ketika jeda tidak samadengan 0
+* Jika memenuhi, maka melakukan perulangan kembali ketika jeda samadengan 0
 ```
         sleep(1);
         if(detikBersih==1)
@@ -935,6 +935,11 @@ void* kebersihan (void *ptr)
             detikBersih=30;
             statusBersih-=10;
         }
+```
+* Pause selama 1 detik
+* Jika detikBersih = 1, maka
+* Set detikBersih = 10
+* Set statusBersih dikurangi 5
 ```
         else detikBersih-=1;
         if(jeda==0)
@@ -949,7 +954,14 @@ void* kebersihan (void *ptr)
         
     }
 }
-
+```
+* Jika detikBersih tidak samadengan 1
+* Set detikBersih kurangi 1
+* Jika jeda = 0, maka
+* Jika statusBersih<=0, maka
+* Printf "Monster mati karena terlalu kotor"
+* Exit fungsi
+```
 void* kesehatan (void *ptr)
 {
     while(1)
@@ -959,11 +971,22 @@ void* kesehatan (void *ptr)
             
         }
         sleep(1);
+```
+* Membuat fungsi kesehatan dengan parameter * ptr
+* Melakukan perulangan while true 
+* Jika memenuhi, maka melakukan perulangan kembali ketika jeda samadengan 0
+```
         if(detikSehat==1)
         {
             detikSehat=10;
             statusSehat+=5;
         }
+```
+* Pause selama 1 detik
+* Jika detikBersih = 1, maka
+* Set detikBersih = 10
+* Set statusBersih dikurangi 5
+```
         else detikSehat-=1;
         if(jeda==0)
         {
@@ -974,12 +997,17 @@ void* kesehatan (void *ptr)
                 printf("Monster mati karena sakit-sakitan\n");
                 exit(EXIT_FAILURE);
             }
-
-        }
-        
+        }     
     }
 }
-
+```
+* Jika detikSehat tidak samadengan 1
+* Set detikSehat kurangi 1
+* Jika jeda = 0, maka
+* Jika statusSehat<=0, maka
+* Printf "Monster mati karena sakit-sakitan"
+* Exit fungsi
+```
 void* countdown (void *ptr)
 {
     while(1)
@@ -988,6 +1016,11 @@ void* countdown (void *ptr)
         {
             
         }
+```
+* Membuat fungsi countdown dengan parameter * ptr
+* Melakukan perulangan while true 
+* Jika memenuhi, maka melakukan perulangan kembali ketika jeda samadengan 0
+```
         if(siapMandi==0)
         {
             sleep(1);
@@ -995,22 +1028,35 @@ void* countdown (void *ptr)
             {
                 detik=20;
                 siapMandi=1;
-            }
+            }    
             else detik-=1;
         }
-        
     }
 }
+```
+* Jika siapMandi = 0, maka
+* Pause selama 1 detik
+* Kemudian melakukan pengecekan apakah detik = 0,
+* Jika benar, maka set detik = 20
+* Dan set siapMandi = 1
+* Jika tidak benar, maka set detik = -1
+```
 int *jumMakan;
+```
+* Deklarasi * jumMakan bertipe integer
+```
 void* toko (void* arg){
     key_t key = 1234;
-
 
     int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
     jumMakan = shmat(shmid, NULL, 0);
 
     *jumMakan = 0;
 }
+```
+* Membuat fungsi toko
+* Fungsi ini digunakan untuk shared memory
+```
 void* menu(void *arg)
 {
     while(1){
@@ -1019,6 +1065,12 @@ void* menu(void *arg)
 
     }
     system("clear");
+```
+* Membuat fungsi menu dengan parameter arg
+* Melakukan perulangan while true
+* Jika memenuh, maka melakukan perulagan jika jeda =0
+* Melakukan system("clear")
+```
     printf("Standby Mode\n");
     printf("nama : %s\n",nama);
     printf("Health : %d\n",statusSehat);
@@ -1037,7 +1089,9 @@ void* menu(void *arg)
     sleep(1);
     }
 }
-
+```
+* Printf status peliharaan, peliharaan ketika battle, kemudian pause selama 1 detik
+```
 void* menu2(void *arg)
 {
     while(1){
@@ -1055,7 +1109,14 @@ void* menu2(void *arg)
     sleep(1);
     }
 }
-
+```
+* Membuat fungsi menu2 dengan parameter arg
+* Melakukan perulangan while true]
+* Jika memenuhi, maka melakukan perulangan ketika jedanya = 2
+* Melakukan system("clear")
+* Printf sesuai dengan kebutuhan suntuk peliharaan berbelanja
+* Pause selama 1 detik
+```
 int main()
 {
     char c;
@@ -1068,6 +1129,17 @@ int main()
         c=getchar();
         i++;
     }
+```
+* Membuat fungsi main
+* Deklarasi variabel c bertipe char
+* Deklarasi variabel i bertike integer
+* Printf "Beri nama monstermu > " 
+* input char untuk memberi nama peliharaan
+* Melakukan perulangan ketika input yang dimasukkan bukan enter (\n)
+* Jika memenuhi, maka membaca tiap karakter dan dimasukkan ke dalam variabel c
+* Melakukan perintah untuk scan karakter
+* Increment i
+```
     pthread_create(&(tid[0]),NULL,kelaparan,NULL);
     pthread_create(&(tid[1]),NULL,kebersihan,NULL);
     pthread_create(&(tid[2]),NULL,kesehatan,NULL);
@@ -1075,12 +1147,11 @@ int main()
     pthread_create(&(tid[4]),NULL,menu,NULL);
     pthread_create(&(tid[5]),NULL,toko,NULL);
     pthread_create(&(tid[6]),NULL,menu2,NULL);
-    // scanf("%s",nama);
-    // printf("%s",nama);
-    // c=getch();
+```
+* Membuat thread kelaparan, kebersihan, kesehatan, countdown, menu, toko, menu2
+```
     while(1)
     {
-        // menu();
         pil=getch();
         if(pil=='1')
         {
@@ -1095,6 +1166,14 @@ int main()
             }
             
         }
+```
+* Melakukan perulangan while true
+* Input angka untuk menentukan perintah (pil) yang diinginkan
+* Jika pil = 1, maka
+* Jika makanan>0, maka statusLapar ditambah 15
+* Decrement makanan
+* Jika statusLapar>200, maka statusLapar = 2000
+```
         else if(pil=='2')
         {
             if(siapMandi==1)
@@ -1108,10 +1187,22 @@ int main()
             }
             
         }
+```
+* Jika pil = 2, maka
+* Mengecek apakah siapMandi = 1
+* Jika benar, maka statusBersih bertambah 30
+* Jika statusBersih>100, maka set statusBersih = 100
+* Set siapMandi = 0 
+```
         else if(pil=='3')
         {
             int statusLawan=100;
             jeda=1;
+```
+* Jika pil = 3, maka
+* Set statusLawan = 100
+* Deklarasi = 1
+```
             while(1)
             {
                 system("clear");
@@ -1123,6 +1214,14 @@ int main()
                 printf("2. Run\n");
                 char charac;
                 charac = getch();
+```
+* Melakukan while true
+* Melakukan system("clear")
+* Printf untuk menampilkan status health monster dan enemy
+* Printf pilihan perintah untuk battle
+* Deklarasi charac bertipe char
+* Melakukan fungsi getch() yang disimpan dalam charac
+```
                 if(charac=='1')
                 {
                     if(statusSehat>0)
@@ -1144,19 +1243,31 @@ int main()
                         statusLawan=0;
                     }
                 }
+```
+* Jika charac = 1, maka
+* Set statusSehat dikurangi 20
+* Jika statusLawan>0 (atau lawan belum kalah), maka set statusLawan dikurangi 20
+* Jika statusSehat < 0, maka statusSehat = 0, jeda = 0, kemudian break
+* Jika statusLawan < 0, maka set statusLawan = 0
+```
                 else if(charac=='2')
                 {
                     jeda=0;
                     break;
                 }
-                
-
             }
         }
+```
+* Jika charac = 2, maka set jeda =0 kemudian break
+```
         else if(pil=='4')
         {
             jeda=2;
             char charac;
+```
+* Jika pil = 4, maka:
+* Set jeda = 2, kemudian deklarasi charac bertipe char
+```
             while(1)
             {
                 charac = getch();
@@ -1174,10 +1285,19 @@ int main()
                     jeda=0;
                     break;
                 }
-                
-
             }
         }
+```
+* Melakukan while true
+* Melakukan fungsi getch() yang disimpan dalam variabel charac
+* Jika charac = 1, maka :
+* Melakukan pengecekan apakah shared memory jumMakan > 0, 
+* Jika benar, maka jumMakan dikurangi 1
+* Increment makanan
+* Jika charac = 2, maka :
+* Set jeda = 0
+* Kemudian break
+```
         else if(pil=='5')
         {
             system("clear");
@@ -1186,6 +1306,13 @@ int main()
             break;
         }    
     }
+```
+* Jika pil = 5, maka :
+* Melakukan system("clear")
+* Printf "Sampai jumpa!!"
+* Melakukan perintah exit
+* Break dari pengecekan
+```
     pthread_join(tid[0],NULL);
     pthread_join(tid[1],NULL);
     pthread_join(tid[2],NULL);
@@ -1196,3 +1323,5 @@ int main()
     return 0;
 }
 ```
+* Melakukan thread join untuk ketujuh thread di atas
+##### Soal 5 Jual :
