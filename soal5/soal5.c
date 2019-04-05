@@ -292,7 +292,7 @@ int main()
                 charac = getch();
                 if(charac=='1')
                 {
-                    if(statusSehat>0)
+                    if(statusSehat>0 && statusLawan>0)
                     {
                         statusSehat-=20;
                         if(statusLawan>0)
