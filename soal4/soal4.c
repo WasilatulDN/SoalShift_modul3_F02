@@ -10,14 +10,13 @@ pthread_t tid[4];
 int jeda=0;
 void *simpan(void *arg)
 {
-    printf("Membuat file SimpanProses1.txt\n");
-    system("ps -aux | head -10 > /home/ihdiannaja2911/Documents/FolderProses1/SimpanProses1.txt");
-    printf("Membuat file SimpanProses2.txt\n");
-    system("ps -aux | head -10 > /home/ihdiannaja2911/Documents/FolderProses2/SimpanProses2.txt");
-    jeda = 1;
-    return NULL;
+        printf("Membuat file SimpanProses1.txt\n");
+        system("ps -aux | head -10 > /home/ihdiannaja2911/Documents/FolderProses1/SimpanProses1.txt");
+        printf("Membuat file SimpanProses2.txt\n");
+        system("ps -aux | head -10 > /home/ihdiannaja2911/Documents/FolderProses2/SimpanProses2.txt");
+        jeda = 1;
+        return NULL;
 }
-
 
 void *kompres(void *arg)
 {
@@ -27,7 +26,7 @@ void *kompres(void *arg)
         }
         printf("Membuat KompresProses1.zip\n");
         system("zip -j /home/ihdiannaja2911/Documents/FolderProses1/KompresProses1.zip /home/ihdiannaja2911/Documents/FolderProses1/SimpanProses1.txt");
-printf("Membuat KompresProses2.zip\n");
+        printf("Membuat KompresProses2.zip\n");
         system("zip -j /home/ihdiannaja2911/Documents/FolderProses2/KompresProses2.zip /home/ihdiannaja2911/Documents/FolderProses2/SimpanProses2.txt");
         
         jeda=2;
@@ -63,18 +62,19 @@ void *ekstrak(void *arg)
         
         return NULL;
 }
+
 int main(void)
 {
-    pthread_create(&(tid[0]),NULL,simpan,NULL);
-    pthread_create(&(tid[1]),NULL,kompres,NULL);
-    pthread_create(&(tid[2]),NULL,hapus,NULL);
-    pthread_create(&(tid[3]),NULL,ekstrak,NULL);
+        pthread_create(&(tid[0]),NULL,simpan,NULL);
+        pthread_create(&(tid[1]),NULL,kompres,NULL);
+        pthread_create(&(tid[2]),NULL,hapus,NULL);
+        pthread_create(&(tid[3]),NULL,ekstrak,NULL);
 
-    pthread_join(tid[0],NULL);
-    pthread_join(tid[1],NULL);
-    pthread_join(tid[2],NULL);
-    pthread_join(tid[3],NULL);
+        pthread_join(tid[0],NULL);
+        pthread_join(tid[1],NULL);
+        pthread_join(tid[2],NULL);
+        pthread_join(tid[3],NULL);
 
-    exit(0);
-    return 0;
+        exit(0);
+        return 0;
 }
