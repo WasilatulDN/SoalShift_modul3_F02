@@ -161,7 +161,7 @@ Jika stok masih ada maka client yang terkoneksi ke server pembeli akan mencetak 
 Server penjual akan mencetak stok saat ini setiap 5 detik sekali
 Menggunakan thread, socket, shared memory
 #### Jawaban :
-* Server Jual
+##### Server Jual
 ```
 #include <stdio.h>
 #include <sys/socket.h>
@@ -279,3 +279,248 @@ int main(int argc, char const *argv[]) {
 * Setiap membaca input, maka membuat thread
 * Join thread
 * Increment index
+
+##### Client Jual :
+```
+#include <stdio.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#define PORT 8001
+  
+int main(int argc, char const *argv[]) {
+    struct sockaddr_in address;
+    int sock = 0, valread;
+    struct sockaddr_in serv_addr;
+    char *hello = "Hello from client";
+    char buffer[1024] = {0};
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        printf("\n Socket creation error \n");
+        return -1;
+    }
+  
+    memset(&serv_addr, '0', sizeof(serv_addr));
+  
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+      
+    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) {
+        printf("\nInvalid address/ Address not supported \n");
+        return -1;
+    }
+  
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+        printf("\nConnection Failed \n");
+        return -1;
+    }
+    char string[100];
+```
+* Fungsi untuk Socket Client
+```
+    while(1)
+    {
+        memset(string, 0, 100);
+        scanf("%s",string);
+        send(sock , string , strlen(string) , 0 );
+    }
+    
+    return 0;
+}
+```
+* Melakukan while true
+* Mengosongkan memory
+* Menscan atau memasukkan input yang disimpan dalam variabel string
+* Input yang dimasukkan dikirim ke server jual
+
+##### Server Beli :
+```
+#include <stdio.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <unistd.h>
+#include <pthread.h>
+#define PORT 8000
+
+pthread_t tid[100];
+int new_socket;
+int *stok;
+char buffer[1024] = {0};
+```
+* Deklarasi library untuk socket server
+* Define port = 8000
+```
+void* cek (void* arg)
+{
+    char *pesangagal = "transaksi gagal";
+    char *pesansukses = "transaksi berhasil";
+    char *pesangagal1 = "perintah salah";
+    if(strcmp(buffer,"beli")==0)
+    {
+        if(*stok > 0)
+        {
+            *stok = *stok - 1;
+            printf("%s\n",pesansukses);
+            send(new_socket , pesansukses , strlen(pesansukses) , 0 );
+        }
+        else
+        {
+            printf("%s\n",pesangagal);
+            send(new_socket , pesangagal , strlen(pesangagal) , 0 );
+        }
+    }
+    else
+    {
+        printf("%s\n",pesangagal1);
+        send(new_socket , pesangagal1 , strlen(pesangagal1) , 0 );
+    }
+        
+    memset(buffer, 0, 1024);
+}
+```
+* Membuat fungsi cek dengan parameter arg
+* Deklarasi * pesangagal = "transaksi gagal"
+* Deklarasi * pesansukses = "transaksi berhasil"
+* Deklarasi * pesangagal1 = "perintah salah"
+* Memandingkan apakah input dari buffer = "beli"
+* Jika benar dan stok tersedia, maka stok bertambah 1
+* Printf pesansukses
+* Mengirim pesansukses meuju client beli
+* Jika benar namun stok tidak tersedia, maka tampilkan pesan gagal
+* Jika salah, maka printf pesangagal1
+* Mengirim pesangagal1 menuju client beli
+* Mengosongkan memory
+```
+int main(int argc, char const *argv[]) {
+    int server_fd, valread;
+    struct sockaddr_in address;
+    int opt = 1;
+    int addrlen = sizeof(address);
+```
+* Untuk socket
+```
+    key_t key = 1234;
+
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    stok = shmat(shmid, NULL, 0);
+
+    *stok = 0;
+```
+* Fungsi untuk shared memory
+```
+    int index=1;
+
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        perror("socket failed");
+        exit(EXIT_FAILURE);
+    }
+      
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons( PORT );
+      
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0) {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_fd, 3) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+
+    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) {
+        perror("accept");
+        exit(EXIT_FAILURE);
+    }
+```
+* Fungsi untuk socket
+``` 
+    while(1)
+    {
+        valread = read( new_socket , buffer, 1024);
+        pthread_create(&(tid[index]),NULL,cek,NULL);
+        pthread_join(tid[index],NULL);
+        index++;
+    }
+    return 0;
+}
+```
+* Melakukan while true
+* Membaca input dari client beli
+* Setiap cient beli menginput, maka membuat thread
+* Melakukan thread join
+* Increment index
+
+##### Client Beli :
+```
+#include <stdio.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#define PORT 8000
+  
+int main(int argc, char const *argv[]) {
+    struct sockaddr_in address;
+    int sock = 0, valread;
+    struct sockaddr_in serv_addr;
+    char *hello = "Hello from client";
+    char buffer[1024] = {0};
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        printf("\n Socket creation error \n");
+        return -1;
+    }
+  
+    memset(&serv_addr, '0', sizeof(serv_addr));
+  
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+      
+    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) {
+        printf("\nInvalid address/ Address not supported \n");
+        return -1;
+    }
+  
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+        printf("\nConnection Failed \n");
+        return -1;
+    }
+    char string[100];
+```
+* Fungsi untuk socket client
+* Define port client beli = 800
+```
+    while(1)
+    {
+        memset(string, 0, 100);
+        scanf("%s",string);
+        send(sock , string , strlen(string) , 0 );
+        valread = read( sock , buffer, 1024);
+        printf("%s\n",buffer );
+        memset(buffer, 0, 1024);
+    }
+    
+    return 0;
+}
+```
+* Melakukan while true
+* Kosongkan memory
+* Scanf input client beli
+* Mengirimkan input menuju server beli
+* Membaca Input dari buffer
+* Printf string dari buffer
+* Kosongkan memory
