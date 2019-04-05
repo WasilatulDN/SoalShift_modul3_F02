@@ -118,6 +118,12 @@ pthread_t thread;
         pthread_create(&t_faktor[i], NULL, faktor, angka);
         pthread_join(t_faktor[i],NULL);
     }
+```
+* Deklarasi * arg bertipe int yang mengalokasikan memori sebesar arg
+* Deklarasi * arg = argc-1
+* Membuat thread 
+* Membuat join thread
+```
     for(i=0;i<argc-1;i++)
     {
         printf("%d! = ",bil[i]);
@@ -134,3 +140,7 @@ pthread_t thread;
     return 0;
 }
 ```
+* Membuat perulangan sebanyak jumlah bilangan yang akan difaktorkan
+* Jika memenuhi maka printf "bilangan = "
+* Jika hasil tiap bilangan yang difaktorkan tidak samadengan -1, maka printf hasilnya
+* Jika hasil bilangan yang difaktorkan = -1, maka printf "error"
