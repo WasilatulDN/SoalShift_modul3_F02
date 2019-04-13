@@ -157,7 +157,7 @@ pthread_t thread;
 * Membuat perulangan sebanyak ukuran array bil
 * Mencetak nilai dari array bil dengan index i.
 * Jika nilai dari array hasil dengan index i tidak sama dengan -1, maka cetak nilai array tersebut.
-* Jika nilai dari array hasil dengan index i tidak sama dengan -1, maka cetak "error" karena faktorial tidak dapat digunakan untuk bilangan negatif.
+* Jika nilai dari array hasil dengan index i sama dengan -1, maka cetak "error" karena faktorial tidak dapat digunakan untuk bilangan negatif.
 * Berikut hasil setelah program dijalankan :
 
 ## Soal 2
@@ -224,7 +224,7 @@ void* cetak (void* arg)
 }
 ```
 * Membuat fungsi cetak dengan parameter arg
-* Melakukan perulangan while true
+* Melakukan perulangan terus menerus
 * Printf stoknya
 * Mencetak stok setiap 5 detik sekali
 ```
@@ -289,10 +289,10 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 ```
-* Melakukan while true
-* Jika memenuhi, maka membaca input dari buffer dan menjalankan fungsi read()
-* Setiap membaca input, maka membuat thread
-* Join thread
+* Melakukan perulangan terus-menerus
+* Mengecek apakah ada pesan dari client, jika ada, pesan dibaca dan ditampung pada variabel buffer dengan menjalankan fungsi read()
+* Setiap membaca input, maka membuat thread yang digunakan untuk mengecek isi pesan dari client
+* Melakukan join pada thread yang telah dibuat
 * Increment index
 
 ##### Client Jual :
@@ -305,7 +305,9 @@ int main(int argc, char const *argv[]) {
 #include <unistd.h>
 #include <arpa/inet.h>
 #define PORT 8001
-  
+```
+* port pada client jual dibuat sama dengan port pada server jual
+```
 int main(int argc, char const *argv[]) {
     struct sockaddr_in address;
     int sock = 0, valread;
@@ -345,9 +347,9 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 ```
-* Melakukan while true
-* Mengosongkan memory
-* Menscan atau memasukkan input yang disimpan dalam variabel string
+* Melakukan perulangan terus menerus
+* Mengosongkan variabel string
+* Menscan atau memasukkan input dan disimpan dalam variabel string
 * Input yang dimasukkan dikirim ke server jual
 
 ##### Server Beli :
@@ -378,9 +380,9 @@ void* cek (void* arg)
     char *pesangagal1 = "perintah salah";
 ```
 * Membuat fungsi cek dengan parameter arg
-* Deklarasi * pesangagal = "transaksi gagal"
-* Deklarasi * pesansukses = "transaksi berhasil"
-* Deklarasi * pesangagal1 = "perintah salah"
+* Deklarasi variabel * pesangagal berisi string "transaksi gagal"
+* Deklarasi variabel * pesansukses berisi string "transaksi berhasil"
+* Deklarasi variabel * pesangagal1 berisi string "perintah salah"
 ``` 
     if(strcmp(buffer,"beli")==0)
     {
@@ -391,10 +393,10 @@ void* cek (void* arg)
             send(new_socket , pesansukses , strlen(pesansukses) , 0 );
         }
 ```
-* Memandingkan apakah input dari buffer = "beli"
-* Jika benar dan stok tersedia, maka stok bertambah 1
-* Printf pesansukses
-* Mengirim pesansukses menuju client beli
+* Memandingkan apakah isi dari buffer = "beli"
+* Jika benar dan stok tersedia, maka stok berkurang 1
+* Printf isi dari variabel pesansukses
+* Mengirim isi dari variabel pesansukses menuju client beli
 ```
         else
         {
@@ -403,8 +405,8 @@ void* cek (void* arg)
         }
     }
 ```
-* Jika benar namun stok tidak tersedia, maka tampilkan pesan gagal
-* Mengirim pesan gagal menuju client beli
+* Jika benar namun stok tidak tersedia, maka tampilkan isi dari pesangagal
+* Mengirim isi dari variabel pesangagal menuju client beli
 ```
     else
     {
@@ -415,9 +417,9 @@ void* cek (void* arg)
     memset(buffer, 0, 1024);
 }
 ```
-* Jika salah, maka printf pesangagal1
-* Mengirim pesangagal1 menuju client beli
-* Mengosongkan memory
+* Jika isi dari variabel bukan "beli", maka cetak isi variabel pesangagal1
+* Mengirim isi variabel pesangagal1 menuju client beli
+* Mengosongkan isi variabel buffer
 ```
 int main(int argc, char const *argv[]) {
     int server_fd, valread;
@@ -435,6 +437,7 @@ int main(int argc, char const *argv[]) {
     *stok = 0;
 ```
 * Fungsi untuk shared memory
+* stok awalnya didefinisikan 0
 ```
     int index=1;
 
@@ -479,10 +482,10 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 ```
-* Melakukan while true
-* Membaca input dari client beli
-* Setiap cient beli menginput, maka membuat thread
-* Melakukan thread join
+* Melakukan perulangan terus menerus
+* Mengecek apakah ada pesan dari client, jika ada, pesan dibaca dan ditampung pada variabel buffer dengan menjalankan fungsi read()
+* Setiap membaca input, maka membuat thread yang digunakan untuk mengecek isi pesan dari client
+* Melakukan join pada thread yang telah dibuat
 * Increment index
 
 ##### Client Beli :
@@ -495,7 +498,9 @@ int main(int argc, char const *argv[]) {
 #include <unistd.h>
 #include <arpa/inet.h>
 #define PORT 8000
-  
+```
+* port pada client beli dibuat sama dengan port pada server beli
+```
 int main(int argc, char const *argv[]) {
     struct sockaddr_in address;
     int sock = 0, valread;
@@ -524,7 +529,7 @@ int main(int argc, char const *argv[]) {
     char string[100];
 ```
 * Fungsi untuk socket client
-* Define port client beli = 800
+* Define port client beli = 8000
 ```
     while(1)
     {
@@ -539,13 +544,21 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 ```
-* Melakukan while true
-* Kosongkan memory
-* Scanf input client beli
-* Mengirimkan input menuju server beli
-* Membaca Input dari buffer
-* Printf string dari buffer
-* Kosongkan memory
+* Melakukan perulangan terus menerus
+* Kosongkan isi variabel string
+* Scanf input client beli dan menampungnya ke variabel string
+* Mengirimkan isi variabel string menuju server beli
+* Membaca Input dari buffer (pesan dari server)
+* mencatak isi string dari buffer
+* Kosongkan variabel buffer
+* Berikut saat program dijalankan :
+* Pada server jual
+
+* Pada client jual
+
+* Pada server beli
+
+* Pada client beli
 
 ## Soal 3
 #### Pertanyaan :
