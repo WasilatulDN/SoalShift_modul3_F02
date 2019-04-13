@@ -1035,7 +1035,7 @@ char getch(void)
   return getch_(0);
 }
 ```
-* Fungsi berguna agar dapat mendekteksi key press (getch)
+* Fungsi berguna agar dapat mendekteksi key press (getch). Pada linux tidak terdapat library conio.h
 ```
 char nama[100];
 int statusLapar=200;
@@ -1052,7 +1052,18 @@ char pil;
 int makanan=0;
 void* menu(void*);
 ```
-* Deklarasi variabel sesuai dengan kebutuhan soal
+* Deklarasi variabel sesuai dengan kebutuhan soal.
+* Variabel nama digunakan untuk menampung nama monster sesuai dengan input user
+* Varibel statusLapar diinisiasi bernilai 200.
+* Variabel statusBersih diinisiasi bernilai 100
+* Variabel statusSehat diinisiasi bernilai 300
+* Variabel detik diinisiasi bernilai 20. Digunakan untuk melakukan countdown kamar mandi
+* Variabel detikSehat diinisiasi bernilai 10. Digunakan untuk melakukan countdown bertambahnya StatusSehat
+* Variabel detikBersih diinisiasi bernilai 30. Digunakan untuk melakukan countdown berkurangnya StatusBersih
+* Variabel detikLapar diinisiasi bernilai 10. Digunakan untuk melakukan countdown berkurangnya StatusLapar
+* Variabel siapMandi diinisiasi bernilai 0. Nilai 0 artinya kamar mandi belum siap digunakan. Nilai 1 artinya kamar mandi siap digunakan.
+* Variabel jeda diinisiasi bernilai 0. Digunakan untuk mengatur jalannya fitur-fitur pada game.
+* Variabel makanan diinisiasi bernilai 0. Digunakan untuk menunjukkan banyak makanan yang dimiliki oleh monster.
 ```
 void* kelaparan (void *ptr)
 {
@@ -1064,9 +1075,9 @@ void* kelaparan (void *ptr)
 
         }
 ```
-* Membuat fungsi kelaparan dengan parameter * ptr
-* Melakukan perulangan while true 
-* Jika memenuhi, maka melakukan erulangan kembali ketika jeda samadengan 0
+* Membuat fungsi kelaparan dengan parameter void * ptr
+* Melakukan perulangan terus menerus
+* Ketika jeda tidak sama 0 maka fitur tidak akan berjalan (baris program dibawahnya tidak dijalankan)
 ```
         sleep(1);
         if(detikLapar==1)
@@ -1077,7 +1088,7 @@ void* kelaparan (void *ptr)
 ```
 * Pause selama 1 detik
 * Jika detikLapar = 1, maka
-* Set detikLapar = 10
+* Set detikLapar = 10 (mereset sehingga akan countdown lagi mulai dari 10)
 * Set statusLapar dikurangi 5
 ```
         else detikLapar-=1;
@@ -1093,11 +1104,11 @@ void* kelaparan (void *ptr)
 }
 ```
 * Jika detikLapar tidak samadengan 1
-* Set detikLapar kurangi 1
+* Set detikLapar kurangi 1 (melakukan countdown)
 * Jika jeda = 0, maka
 * Jika statusLapar<=0, maka
 * Printf "Monster mati karena kelaparan"
-* Exit fungsi
+* Exit program utama
 ```
 void* kebersihan (void *ptr)
 {
@@ -1109,9 +1120,9 @@ void* kebersihan (void *ptr)
             
         }
 ```
-* Membuat fungsi kebersihan dengan parameter * ptr
-* Melakukan perulangan while true 
-* Jika memenuhi, maka melakukan perulangan kembali ketika jeda samadengan 0
+* Membuat fungsi kebersihan dengan parameter void * ptr
+* Melakukan perulangan terus menerus
+* Ketika jeda tidak sama 0 maka fitur tidak akan berjalan (baris program dibawahnya tidak dijalankan)
 ```
         sleep(1);
         if(detikBersih==1)
@@ -1122,8 +1133,8 @@ void* kebersihan (void *ptr)
 ```
 * Pause selama 1 detik
 * Jika detikBersih = 1, maka
-* Set detikBersih = 10
-* Set statusBersih dikurangi 5
+* Set detikBersih = 30 (mereset sehingga akan countdown lagi mulai dari 30)
+* Set statusBersih dikurangi 10
 ```
         else detikBersih-=1;
         if(jeda==0)
@@ -1140,11 +1151,11 @@ void* kebersihan (void *ptr)
 }
 ```
 * Jika detikBersih tidak samadengan 1
-* Set detikBersih kurangi 1
+* Set detikBersih kurangi 1 (melakukan countdown)
 * Jika jeda = 0, maka
 * Jika statusBersih<=0, maka
 * Printf "Monster mati karena terlalu kotor"
-* Exit fungsi
+* Exit program utama
 ```
 void* kesehatan (void *ptr)
 {
@@ -1156,9 +1167,9 @@ void* kesehatan (void *ptr)
         }
         sleep(1);
 ```
-* Membuat fungsi kesehatan dengan parameter * ptr
-* Melakukan perulangan while true 
-* Jika memenuhi, maka melakukan perulangan kembali ketika jeda samadengan 0
+* Membuat fungsi kesehatan dengan parameter void * ptr
+* Melakukan perulangan terus menerus
+* Ketika jeda tidak sama 0 maka fitur tidak akan berjalan (baris program dibawahnya tidak dijalankan)
 ```
         if(detikSehat==1)
         {
@@ -1167,9 +1178,9 @@ void* kesehatan (void *ptr)
         }
 ```
 * Pause selama 1 detik
-* Jika detikBersih = 1, maka
-* Set detikBersih = 10
-* Set statusBersih dikurangi 5
+* Jika detikSehat = 1, maka
+* Set detikSehat = 10 (mereset sehingga akan countdown lagi mulai dari 10)
+* Set statusSehat dikurangi 5
 ```
         else detikSehat-=1;
         if(jeda==0)
@@ -1186,11 +1197,11 @@ void* kesehatan (void *ptr)
 }
 ```
 * Jika detikSehat tidak samadengan 1
-* Set detikSehat kurangi 1
+* Set detikSehat kurangi 1 (melkukan countdown)
 * Jika jeda = 0, maka
 * Jika statusSehat<=0, maka
 * Printf "Monster mati karena sakit-sakitan"
-* Exit fungsi
+* Exit program utama
 ```
 void* countdown (void *ptr)
 {
@@ -1202,8 +1213,8 @@ void* countdown (void *ptr)
         }
 ```
 * Membuat fungsi countdown dengan parameter * ptr
-* Melakukan perulangan while true 
-* Jika memenuhi, maka melakukan perulangan kembali ketika jeda samadengan 0
+* Melakukan perulangan terus menerus
+* Ketika jeda tidak sama 0 maka fitur tidak akan berjalan (baris program dibawahnya tidak dijalankan)
 ```
         if(siapMandi==0)
         {
@@ -1218,12 +1229,12 @@ void* countdown (void *ptr)
     }
 }
 ```
-* Jika siapMandi = 0, maka
+* Jika siapMandi = 0 (kamar mandi belum siap digunakan), maka
 * Pause selama 1 detik
 * Kemudian melakukan pengecekan apakah detik = 0,
-* Jika benar, maka set detik = 20
-* Dan set siapMandi = 1
-* Jika tidak benar, maka set detik = -1
+* Jika benar, maka set detik = 20 (mereset detik sehingga countdown akan dimulai dari 20 lagi)
+* Dan set siapMandi = 1 (kamar mandi siap digunakan)
+* Jika tidak benar, maka set detik = -1 (melakukan countdown)
 ```
 int *jumMakan;
 ```
@@ -1239,7 +1250,7 @@ void* toko (void* arg){
 }
 ```
 * Membuat fungsi toko
-* Fungsi ini digunakan untuk shared memory
+* Fungsi ini digunakan untuk menginisiasi shared memory
 ```
 void* menu(void *arg)
 {
@@ -1251,9 +1262,9 @@ void* menu(void *arg)
     system("clear");
 ```
 * Membuat fungsi menu dengan parameter arg
-* Melakukan perulangan while true
-* Jika memenuh, maka melakukan perulagan jika jeda =0
-* Melakukan system("clear")
+* Melakukan perulangan terus menerus
+* Ketika jeda tidak sama 0 maka fitur tidak akan berjalan (baris program dibawahnya tidak dijalankan)
+* Melakukan system("clear") (mengosongkan tampilan pada console)
 ```
     printf("Standby Mode\n");
     printf("nama : %s\n",nama);
@@ -1274,7 +1285,7 @@ void* menu(void *arg)
     }
 }
 ```
-* Printf status peliharaan, peliharaan ketika battle, kemudian pause selama 1 detik
+* Printf status peliharaan, peliharaan ketika battle, kemudian pause selama 1 detik (menu dicetak tiap 1 detik)
 ```
 void* menu2(void *arg)
 {
@@ -1295,11 +1306,11 @@ void* menu2(void *arg)
 }
 ```
 * Membuat fungsi menu2 dengan parameter arg
-* Melakukan perulangan while true]
-* Jika memenuhi, maka melakukan perulangan ketika jedanya = 2
-* Melakukan system("clear")
-* Printf sesuai dengan kebutuhan suntuk peliharaan berbelanja
-* Pause selama 1 detik
+* Melakukan perulangan terus menerus
+* Ketika jeda tidak sama 0 maka fitur tidak akan berjalan (baris program dibawahnya tidak dijalankan)
+* Melakukan system("clear") (mengosongkan tampilan console)
+* Printf menu sesuai dengan kebutuhan suntuk peliharaan berbelanja (menu saat shop mode)
+* Pause selama 1 detik (menu dicetak tiap satu detik)
 ```
 int main()
 {
@@ -1320,7 +1331,7 @@ int main()
 * Printf "Beri nama monstermu > " 
 * input char untuk memberi nama peliharaan
 * Melakukan perulangan ketika input yang dimasukkan bukan enter (\n)
-* Jika memenuhi, maka membaca tiap karakter dan dimasukkan ke dalam variabel c
+* Jika memenuhi, maka membaca tiap karakter dan dimasukkan ke dalam variabel nama dengan index i.
 * Melakukan perintah untuk scan karakter
 * Increment i
 ```
@@ -1351,12 +1362,12 @@ int main()
             
         }
 ```
-* Melakukan perulangan while true
+* Melakukan perulangan terus menerus
 * Input angka untuk menentukan perintah (pil) yang diinginkan
 * Jika pil = 1, maka
-* Jika makanan>0, maka statusLapar ditambah 15
+* Jika makanan>0 (monster mempunyai makanan), maka statusLapar ditambah 15
 * Decrement makanan
-* Jika statusLapar>200, maka statusLapar = 2000
+* Jika statusLapar>200, maka statusLapar = 200 (monster maksimal hanya bisa memiliki statusLapar 200)
 ```
         else if(pil=='2')
         {
@@ -1373,10 +1384,10 @@ int main()
         }
 ```
 * Jika pil = 2, maka
-* Mengecek apakah siapMandi = 1
+* Mengecek apakah siapMandi = 1 (kamar mandi siap digunakan)
 * Jika benar, maka statusBersih bertambah 30
-* Jika statusBersih>100, maka set statusBersih = 100
-* Set siapMandi = 0 
+* Jika statusBersih>100, maka set statusBersih = 100 (monster maksimal hanya bisa memiliki statusBersih 100)
+* Set siapMandi = 0 (kamar mandi tidak siap digunakan)
 ```
         else if(pil=='3')
         {
@@ -1385,7 +1396,7 @@ int main()
 ```
 * Jika pil = 3, maka
 * Set statusLawan = 100
-* Deklarasi = 1
+* Deklarasi jeda = 1 untuk me-freeze thread yang mengubah nilai statusSehat, statusBersih, siapMandi, dll.
 ```
             while(1)
             {
@@ -1432,7 +1443,7 @@ int main()
 * Set statusSehat dikurangi 20
 * Jika statusLawan>0 (atau lawan belum kalah), maka set statusLawan dikurangi 20
 * Jika statusSehat < 0, maka statusSehat = 0, jeda = 0, kemudian break
-* Jika statusLawan < 0, maka set statusLawan = 0
+* Jika statusLawan < 0, maka set statusLawan = 0 (statusLawan tidak bisa negatif)
 ```
                 else if(charac=='2')
                 {
@@ -1442,7 +1453,7 @@ int main()
             }
         }
 ```
-* Jika charac = 2, maka set jeda =0 kemudian break
+* Jika charac = 2, maka set jeda =0 kemudian break. Jeda dikembalikan ke 0 agar thread yang mengubah nilai statusLapar, statusBersih, dll bisa berjalan.
 ```
         else if(pil=='4')
         {
@@ -1450,7 +1461,7 @@ int main()
             char charac;
 ```
 * Jika pil = 4, maka:
-* Set jeda = 2, kemudian deklarasi charac bertipe char
+* Set jeda = 2, kemudian deklarasi charac bertipe char. Jeda diatur sama dengan 2 agar thread menu2 dapat mencetak menu shop mode.
 ```
             while(1)
             {
@@ -1494,7 +1505,7 @@ int main()
 * Jika pil = 5, maka :
 * Melakukan system("clear")
 * Printf "Sampai jumpa!!"
-* Melakukan perintah exit
+* Melakukan perintah exit (keluar dari program utama)
 * Break dari pengecekan
 ```
     pthread_join(tid[0],NULL);
@@ -1555,7 +1566,7 @@ char getch(void)
   return getch_(0);
 }
 ```
-* Fungsi di atas agar dapat menggunakan fungsi getch()
+* Fungsi di atas agar dapat menggunakan fungsi getch(). Pada linux tidak terdapat library conio.h
 ```
 int *jumMakan;
 pthread_t tid[2];
@@ -1594,7 +1605,7 @@ void* menutoko (void* arg)
 * Membuat fungsi menutoko dengan parameter arg
 * Melakukan while true
 * Printf hal yang dibutuhkan untuk shop
-* Pause selama 1 detik
+* Pause selama 1 detik (menu dicetak tiap satu detik)
 ```
 void main()
 {
@@ -1618,7 +1629,15 @@ void main()
 * Membuat fungsi main
 * Mmembuat thread awal dan menutoko
 * Deklarasi variabel pil bertipe char
-* Melakukan perulangan while true
+* Melakukan perulangan terus menerus
 * Jika memenuhi maka masukka input ke dalam variabel pil
 * Jika pil = 1, maka jumMakan + 1
 * Jika pil = 2, maka break
+* Berikut hasil setelah program dijalankan
+* Stanby Mode
+
+* Shop Mode
+
+* Battle Mode
+
+* Toko
