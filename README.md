@@ -1,5 +1,5 @@
 # SoalShift_modul3_F02
-Pertanyaan, Jawaban dan Penjelasan Praktikum Modul 2 Sistem Operasi 2019.
+Pertanyaan, Jawaban dan Penjelasan Praktikum Modul 3 Sistem Operasi 2019.
 
 Oleh :
 * Wasilatul Dewi Ningrum (05111740000004)
@@ -24,9 +24,9 @@ int hasil[1000];
 pthread_t t_faktor[1000];
 int status1 = 0;
 ```
-* Deklarasi array bil dan hasil bertipe integer
-* Deklarasi variabel t_faktor bertipe pthread
-* Deklarasi variabel status1 bertipe integer
+* Deklarasi array bil dan hasil bertipe integer. Array bil digunakan untuk menampung input, sedangkan array hasil digunakan untuk menampung hasil faktorial dari tiap anggota array bil
+* Deklarasi variabel t_faktor bertipe pthread. Thread akan digunakan untuk menghitung faktorial dari tiap anggota array bil.
+* Deklarasi variabel status1 bertipe integer. Digunakan untuk menunggu program lain agar menyelesaikan tugasnya.
 
 ```
 void* faktor(void *pntr)
@@ -36,12 +36,18 @@ void* faktor(void *pntr)
 
     }
 ```
-* Membuat fungsi faktor dengan parameter void untuk menghitung hasil faktorial
-* ketika statusnya = 0 dengan maka tidak melakukan apapun
+* Merupakan thread untuk menghitung faktorial.
+* `while(status1 == 0)` digunakan untuk menunggu jalannya thread lain yaitu thread yang akan melakukan sorting.
 ```
     int cur = *((int *) pntr);
+```
+* thread tidak dapat melakukan passing data bertipe integer. Sehingga dari void dikonversi menjadi integer. Variabel cur menunjukkan index array bil yang akan dicari faktorialnya.
+```
     int num;
     num = bil[cur];
+```
+* Variabel num digunakan untuk menampung isi array bil dengan index cur.
+```
     int i, res = 1;
     for(i=1;i<=num;i++)
     {
@@ -58,13 +64,10 @@ void* faktor(void *pntr)
     free(pntr);
 }
 ```
-* Deklarasi variabel cur, num, dan i
-* Melakukan perulangan ketika bilangan num (bilangan yang difaktorkan) kurang dari samadengan 1
-* Jika memenuhi persyaratan perulangan tersebut, maka bilangan num dikalikan dengan i dan ditampung dalam variabel res
-* Melakukan perulangan ketika bilangan num (bilangan yang difaktorkan) kurang dari 0
-* Jika memenuhi persyaratan perulangan tersebut, maka variabel hasil[cur] disamadengankan -1
-* Jika tidak memenuhi persyaratan perulangan tersebut, maka variabel hasil[cur] disamadengankan res (hasil perkalian di atas)
-* Setelah selesai, maka memori pointer dikosongkan
+* Merupakan proses untuk mencari nilai faktorial dari nilai variabel num.
+* Awalnya variabel res dideklarasikan bernilai 1.
+* Lalu variabel res akan dikali dengan res+1, res+2, dst hingga variabel i bernilai sama dengan variabel num.
+* Variabel res merupakan hasil faktorial. Lalu nilai dari variabel res disimpan pada array hasil dengan index cur. jika ternyata variabel num bernilai kurang dari 0, maka yang disimpan pada array hasil dengan index cur adalah -1.
 ```
 void* insert(void *ptr) 
 { 
@@ -86,13 +89,14 @@ void* insert(void *ptr)
     status1=1; 
 } 
 ```
-* Membuat fungsi insert untuk melakukan sorting dengan cara insertion sort
+* Thread insert digunakan untuk melakukan sorting dengan cara insertion sort
 * Deklarasi variabel status1 = 0
+* Thread tidak dapat melakukan passing data bertipe integer. Sehingga dari void dikonversi menjadi integer. Variabel n menunjukkan banyaknya angggota array bil.
 * Deklarasi variabel i,key, dan j bertipe integer
 * Melakukan perulangan 
 * Memindahkan element bill[0..i-1], yang lebih besar dari key, ke satu posisi di depan posisi sekarang  
 * Setelah fungsi selesai dijalankan, kosongkan memori 
-* Mengubah status1 = 1
+* Mengubah status1 = 1. Hal ini akan memiliki efek pada thread faktorial.
 ```
 int main(int argc, char** argv)
 {
@@ -102,15 +106,24 @@ int main(int argc, char** argv)
         bil[i-1]=atoi((char*)argv[i]);
     }
 ```
-* Membuat fungsi main dengan parameter argc (argumen untuk menghitung jumah perintah) dan argv(argumen untuk menampung perintah) 
+* Membuat fungsi main dengan parameter argc (argumen untuk menghitung jumah parameter) dan argv(argumen untuk menampung parameter) 
 * Deklarasi variabel i bertipe integer
-* Karena argv bertipe char, maka bil[i-1] (angka yang akan difaktorialkan) diubah menjadi tipe integer dengan perintah `atoi((char*)argv[i])`
+* malakukan perulangan
+* Karena argv bertipe char, maka argv[i] (angka yang akan difaktorialkan) diubah menjadi tipe integer dengan perintah `atoi((char*)argv[i])` dan ditampung pada array bil dengan index [i-1]. Konversi dilakukan mulai dari i=1 karena argv[0] berisi nama program yang dijalankan.
 ```
 pthread_t thread;
     int *arg = malloc(sizeof(arg));
     *arg = argc -1;
+```
+* Deklarasi * arg bertipe int yang mengalokasikan memori sebesar arg
+* Deklarasi * arg = argc-1. Variabel arg menunjukkan banyaknya angka yang akan dihitung faktorialnya (ukuran array). Ukuran array adalah jumlah argumen dikurangi 1 karena argv[0] berisi nama program yang dijalankan.
+```
     pthread_create(&thread, NULL, insert, arg);
     pthread_join(thread,NULL);
+```
+* Membuat thread yanng digunakan untuk melakukan sorting array bil.
+* Melakukan join pada thread yang telah dibuat.
+```
     for(i=0;i<argc-1;i++)
     {
         int *angka = malloc(sizeof(angka));
@@ -119,10 +132,11 @@ pthread_t thread;
         pthread_join(t_faktor[i],NULL);
     }
 ```
-* Deklarasi * arg bertipe int yang mengalokasikan memori sebesar arg
-* Deklarasi * arg = argc-1
-* Membuat thread 
-* Membuat join thread
+* Melakukan perulangan sebanyak ukuran array bil
+* Deklarasi * angka bertipe int yang mengalokasikan memori sebesar angka
+* Variabel angka berisi nilai dari i.
+* Membuat thread yanng digunakan untuk menghitung faktorial dari bilangan pada array dengan index i.
+* Melakukan join thread yang telah dibuat.
 ```
     for(i=0;i<argc-1;i++)
     {
@@ -140,10 +154,11 @@ pthread_t thread;
     return 0;
 }
 ```
-* Membuat perulangan sebanyak jumlah bilangan yang akan difaktorkan
-* Jika memenuhi maka printf "bilangan = "
-* Jika hasil tiap bilangan yang difaktorkan tidak samadengan -1, maka printf hasilnya
-* Jika hasil bilangan yang difaktorkan = -1, maka printf "error"
+* Membuat perulangan sebanyak ukuran array bil
+* Mencetak nilai dari array bil dengan index i.
+* Jika nilai dari array hasil dengan index i tidak sama dengan -1, maka cetak nilai array tersebut.
+* Jika nilai dari array hasil dengan index i tidak sama dengan -1, maka cetak "error" karena faktorial tidak dapat digunakan untuk bilangan negatif.
+* Berikut hasil setelah program dijalankan :
 
 ## Soal 2
 #### Pertanyaan
