@@ -601,8 +601,15 @@ int kurangSiraj = 0;
 // char perintah[100];
 pthread_t tid[2];
 ```
-* Deklarasi state yang sesuai dengan soal
-* Deklarasi tid bertipe pthreas_t
+* Variabel AkmalStat diinisiasi bernilai 0 (sesuai permintaan soal).
+* Variabel SirajStat diinisiasi bernilai 100 (sesuai permintaan soal).
+* Variabel changeAkmal diinisiasi bernilai 1. Nilai 1 berarti AkmalStat boleh diubah (ditambah nilainya). Nilai 0 berarti AkmalStat tidak boleh diubah (ditambah nilainya).
+* Variabel changeSiraj diinisiasi bernilai 1. Nilai 1 berarti SirajStat boleh diubah (dikurang nilainya). Nilai 0 berarti SirajStat tidak boleh diubah (dikurang nilainya).
+* Variabel pauseAkmal diinisiasi bernilai 0. Nilai 0 berarti fitur "AGmal Ayo Bangun" tidak sedang di freeze selama 10 detik. Nilai 1 berarti fitur "Iraj Ayo Tidur" sudah dijalankan 1 kali. Nilai 2 berarti fitur "Iraj Ayo Tidur" sudah dijalankan 2 kali. Ketika bernilai 3 maka fitur sedang di freeze selama 10 detik.
+* Variabel pauseSiraj diinisiasi bernilai 0. Nilai 0 berarti fitur "Iraj Ayo Tidur" tidak sedang di freeze selama 10 detik. Nilai 1 berarti fitur "Agmal Ayo Bangun" sudah dijalankan 1 kali. Nilai 2 berarti fitur "Agmal Ayo Bangun" sudah dijalankan 2 kali. Ketika bernilai 3 maka fitur sedang di freeze selama 10 detik.
+* Variabel tambahAkmal diinisiasi bernilai 0. Nilai 0 berarti fitur "Agmal Ayo Bangun" belum dipanggil. Nilai 1 berarti fungsi "Agmal Ayo Bangun" sudah dipanggil namun belum dieksekusi.
+* Variabel kurangSiraj diinisiasi bernilai 0. Nilai 0 berarti fitur "Iraj Ayo Tidur" belum dipanggil. Nilai 1 berarti fungsi "Iraj Ayo Tidur" sudah dipanggil namun belum dieksekusi.
+* Deklarasi tid bertipe pthread_t yang akan digunakan saat membuat thread
 ```
 void* akmal(void *ptr){
 	while(1){
@@ -614,13 +621,13 @@ void* akmal(void *ptr){
                 pauseAkmal=0;
             }
 ```
-* Membuat fungsi akmal dengan parameter * ptr
-* Melakukan while true
+* Membuat fungsi akmal dengan parameter void * ptr
+* Melakukan perulangan terus menerus
 * Jika pauseAkmal=3, maka :
-* Menset ChangeAkmal = 0
+* Menset changeAkmal = 0. Artinya AkmalStat tidak boleh diubah.
 * Mencetak "Agmal Ayo Bangun Disabled 10 s"
 * Jeda selama 10 detik
-* Set pauseAkmal = 0
+* Set pauseAkmal = 0. Artinya counter fitur "Iraj Ayo Tidur" direset.
 ```
             else if(changeAkmal==1)
             {
@@ -633,11 +640,11 @@ void* akmal(void *ptr){
                 }
             }
 ```
-* Jika changeAkmal = 1, maka
-* Melakukan pengecekan apakah tambahAkmal = 1
+* Jika changeAkmal = 1 (AkmalStat boleh diubah), maka
+* Melakukan pengecekan apakah tambahAkmal = 1 (Apakah fitur sedang dipanggil namun belum dieksekusi).
 * Jika memenuhi, maka AkmalStat bertambah 15
-* Set pauseSiraj increment
-* Set tambahAkmal = 0
+* Counter pauseSiraj mengalami increment
+* Set tambahAkmal = 0. Artinya fitur sudah dieksekusi sehingga nilai tambahAkmal dikembalikan ke 0.
 ```
             else if(changeAkmal == 0)
             {
@@ -645,9 +652,9 @@ void* akmal(void *ptr){
                 tambahAkmal=0;
             }
 ```
-* Mengecek apakah changeAkmal = 0
-* Jika memenuhi, maka set changeAkmal = 1
-* Set tambahAkmal = 0
+* Mengecek apakah changeAkmal = 0 (AkmalStat tidak boleh diubah)
+* Jika memenuhi, maka set changeAkmal = 1. (mereset sehingga AkmalStat boleh diubah). Kondisi ini terpenuhi ketika fitur "Agmal Ayo Bangun" disabled. Saat disabled, changeAkmal di set menjadi 0. Saat program selesai menjalankan `sleep`, program akan masuk ke kondisi ini.
+* Set tambahAkmal = 0. Saat disabled, mungkin saja user tetap mencoba menjalankan fitur "Agmal Ayo Bangun". Ketika user mencoba menjalankan fitur "Agmal Ayo Bangun", variabel changeAkmal akan di set menjadi 1. Oleh karena itu, Saat program selesai menjalankan `sleep`, tambahAkmal di reset menjadi 0.
 ```
         if(AkmalStat>=100)
         {
@@ -671,13 +678,13 @@ void* siraj (void *ptr){
                 pauseSiraj=0;
             }
 ```
-* Membuat fungsi siraj dengan parameter * ptr
-* Melakukan while true
+* Membuat fungsi siraj dengan parameter void * ptr
+* Melakukan perulangan terus menerus
 * Jika pauseSiraj=3, maka :
-* Menset ChangeSiraj = 0
-* Mencetak "Fitur Iraj Ayo Tidur Disabled 10 s"
+* Menset changeSiraj = 0. Artinya SirajStat tidak boleh diubah.
+* Mencetak "Iraj Ayo Tidur Disabled 10 s"
 * Jeda selama 10 detik
-* Set pauseSiraj = 0
+* Set pauseSiraj = 0. Artinya counter fitur "Agmal Ayo Bangun" direset.
 ```
             else if(changeSiraj==1)
             {
@@ -690,11 +697,11 @@ void* siraj (void *ptr){
                 }
             }
 ```
-* Jika changeAkmal = 1, maka
-* Melakukan pengecekan apakah tambahAkmal = 1
-* Jika memenuhi, maka AkmalStat bertambah 15
-* Set pauseSiraj increment
-* Set tambahAkmal = 0
+* Jika changeSiraj = 1 (SirajStat boleh diubah), maka
+* Melakukan pengecekan apakah tambahSiraj = 1 (Apakah fitur sedang dipanggil namun belum dieksekusi).
+* Jika memenuhi, maka SirajStat berkurang 20
+* Counter pauseAkmal mengalami increment
+* Set kurangSiraj = 0. Artinya fitur sudah dieksekusi sehingga nilai kurangSiraj dikembalikan ke 0.
 ```
             else if(changeSiraj == 0)
             {
@@ -702,9 +709,9 @@ void* siraj (void *ptr){
                 kurangSiraj=0;
             }
 ```
-* Mengecek apakah changeAkmal = 0
-* Jika memenuhi, maka set changeAkmal = 1
-* Set tambahAkmal = 0
+* Mengecek apakah changeSiraj = 0 (SirajStat tidak boleh diubah)
+* Jika memenuhi, maka set changeSiraj = 1. (mereset sehingga SirajStat boleh diubah). Kondisi ini terpenuhi ketika fitur "Iraj Ayo Tidur" disabled. Saat disabled, changeSiraj di set menjadi 0. Saat program selesai menjalankan `sleep`, program akan masuk ke kondisi ini.
+* Set kurangSiraj = 0. Saat disabled, mungkin saja user tetap mencoba menjalankan fitur "Iraj Ayo Tidur". Ketika user mencoba menjalankan fitur "Iraj Ayo Tidur", variabel changeSiraj akan di set menjadi 1. Oleh karena itu, Saat program selesai menjalankan `sleep`, kurangSiraj di reset menjadi 0.
 ```
         if(SirajStat<=0)
         {
@@ -714,8 +721,8 @@ void* siraj (void *ptr){
    	}
 }
 ```
-* Melakukan pengecekan apakah AkmalStat melebihi batas atau >= 100
-* Mencetak "Agmal Terbangun,mereka bangun pagi dan berolahraga"
+* Melakukan pengecekan apakah SirajStat melebihi batas atau <=0
+* Mencetak "Iraj ikut tidur, dan bangun kesiangan bersama Agmal"
 * Exit program
 ```
 void menu()
@@ -728,6 +735,7 @@ void menu()
 }
 ```
 * Membuat fungsi menu sesuai dengan soal
+* Digunakan untuk mencetak menu
 ```
 int main()
 {
@@ -749,10 +757,10 @@ int main()
             // system("stty -icanon -echo; dd if=/dev/tty of=/dev/null bs=1 count=1 2>/dev/null; stty icanon echo");
         }
 ```
-* Melakukan while true
+* Melakukan perulangan terus menerus
 * Scanf pil yang dipilih
-* Jika pil = 1, maka printf "Agmal WakeUp_Status = " diikuti dengan status akmal
-* Printf "Iraj Spirit_Status = " diikuti dengan status siraj
+* Jika pil = 1, maka cetak "Agmal WakeUp_Status = " diikuti dengan AkmalStat
+* Cetak "Iraj Spirit_Status = " diikuti dengan SirajStat
 ```
         else if(pil==2)
         {
@@ -762,7 +770,7 @@ int main()
         }
 ```
 * Jika pil = 2, maka
-* tambahAkmal = 1
+* set tambahAkmal = 1. Artinya fitur "Agmal Ayo Bangun" dipanggil namun belum dieksekusi.
 ```
         else if(pil==3)
         {
@@ -776,8 +784,10 @@ int main()
 }
 ```
 * Jika pil =3, maka
-* kurangSiraj = 1
-* join thread akmal dan threan siraj
+* set kurangSiraj = 1. Artinya fitur "Iraj Ayo Tidur" dipanggil namun belum dieksekusi.
+* join thread akmal dan thread siraj
+* Berikut hasil setelah program dieksekusi :
+
 ## Soal 4
 #### Pertanyaan :
 Buatlah sebuah program C dimana dapat menyimpan list proses yang sedang berjalan (ps -aux) maksimal 10 list proses. Dimana awalnya list proses disimpan dalam di 2 file ekstensi .txt yaitu  SimpanProses1.txt di direktori /home/Document/FolderProses1 dan SimpanProses2.txt di direktori /home/Document/FolderProses2 , setelah itu masing2 file di  kompres zip dengan format nama file KompresProses1.zip dan KompresProses2.zip dan file SimpanProses1.txt dan SimpanProses2.txt akan otomatis terhapus, setelah itu program akan menunggu selama 15 detik lalu program akan mengekstrak kembali file KompresProses1.zip dan KompresProses2.zip 
@@ -909,6 +919,15 @@ int main(void)
 ```
 * Join tiap thread yang telah dibuat
 * Proses selesai, exit proses
+* Berikut hasil saat program dijalankan :
+* Membuat file .txt
+
+* Mengompres file .zip
+
+* Menghapus file .txt
+
+* Mengekstrak file .zip
+
 ## Soal 5
 #### Pertanyaan :
 Angga, adik Jiwang akan berulang tahun yang ke sembilan pada tanggal 6 April besok. Karena lupa menabung, Jiwang tidak mempunyai uang sepeserpun untuk membelikan Angga kado. Kamu sebagai sahabat Jiwang ingin membantu Jiwang membahagiakan adiknya sehingga kamu menawarkan bantuan membuatkan permainan komputer sederhana menggunakan program C. Jiwang sangat menyukai idemu tersebut. Berikut permainan yang Jiwang minta. 
