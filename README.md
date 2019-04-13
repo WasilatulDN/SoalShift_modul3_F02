@@ -361,6 +361,12 @@ void* cek (void* arg)
     char *pesangagal = "transaksi gagal";
     char *pesansukses = "transaksi berhasil";
     char *pesangagal1 = "perintah salah";
+```
+* Membuat fungsi cek dengan parameter arg
+* Deklarasi * pesangagal = "transaksi gagal"
+* Deklarasi * pesansukses = "transaksi berhasil"
+* Deklarasi * pesangagal1 = "perintah salah"
+``` 
     if(strcmp(buffer,"beli")==0)
     {
         if(*stok > 0)
@@ -369,12 +375,22 @@ void* cek (void* arg)
             printf("%s\n",pesansukses);
             send(new_socket , pesansukses , strlen(pesansukses) , 0 );
         }
+```
+* Memandingkan apakah input dari buffer = "beli"
+* Jika benar dan stok tersedia, maka stok bertambah 1
+* Printf pesansukses
+* Mengirim pesansukses menuju client beli
+```
         else
         {
             printf("%s\n",pesangagal);
             send(new_socket , pesangagal , strlen(pesangagal) , 0 );
         }
     }
+```
+* Jika benar namun stok tidak tersedia, maka tampilkan pesan gagal
+* Mengirim pesan gagal menuju client beli
+```
     else
     {
         printf("%s\n",pesangagal1);
@@ -384,15 +400,6 @@ void* cek (void* arg)
     memset(buffer, 0, 1024);
 }
 ```
-* Membuat fungsi cek dengan parameter arg
-* Deklarasi * pesangagal = "transaksi gagal"
-* Deklarasi * pesansukses = "transaksi berhasil"
-* Deklarasi * pesangagal1 = "perintah salah"
-* Memandingkan apakah input dari buffer = "beli"
-* Jika benar dan stok tersedia, maka stok bertambah 1
-* Printf pesansukses
-* Mengirim pesansukses meuju client beli
-* Jika benar namun stok tidak tersedia, maka tampilkan pesan gagal
 * Jika salah, maka printf pesangagal1
 * Mengirim pesangagal1 menuju client beli
 * Mengosongkan memory
