@@ -160,6 +160,8 @@ pthread_t thread;
 * Jika nilai dari array hasil dengan index i sama dengan -1, maka cetak "error" karena faktorial tidak dapat digunakan untuk bilangan negatif.
 * Berikut hasil setelah program dijalankan :
 
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal1/soal1.png" width="600">
+
 ## Soal 2
 #### Pertanyaan
 Pada suatu hari ada orang yang ingin berjualan 1 jenis barang secara private, dia memintamu membuat program C dengan spesifikasi sebagai berikut:
@@ -554,11 +556,19 @@ int main(int argc, char const *argv[]) {
 * Berikut saat program dijalankan :
 * Pada server jual
 
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal2/soal2serverjual.png" width="600">
+
 * Pada client jual
+
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal2/soal2clientjual.png" width="600">
 
 * Pada server beli
 
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal2/soal2serverbeli.png" width="600">
+
 * Pada client beli
+
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal2/soal2clientbeli.png" width="600">
 
 ## Soal 3
 #### Pertanyaan :
@@ -788,6 +798,10 @@ int main()
 * join thread akmal dan thread siraj
 * Berikut hasil setelah program dieksekusi :
 
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal3/soal3a.png" width="600">
+
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal3/soal3b.png" width="600">
+
 ## Soal 4
 #### Pertanyaan :
 Buatlah sebuah program C dimana dapat menyimpan list proses yang sedang berjalan (ps -aux) maksimal 10 list proses. Dimana awalnya list proses disimpan dalam di 2 file ekstensi .txt yaitu  SimpanProses1.txt di direktori /home/Document/FolderProses1 dan SimpanProses2.txt di direktori /home/Document/FolderProses2 , setelah itu masing2 file di  kompres zip dengan format nama file KompresProses1.zip dan KompresProses2.zip dan file SimpanProses1.txt dan SimpanProses2.txt akan otomatis terhapus, setelah itu program akan menunggu selama 15 detik lalu program akan mengekstrak kembali file KompresProses1.zip dan KompresProses2.zip 
@@ -920,13 +934,24 @@ int main(void)
 * Join tiap thread yang telah dibuat
 * Proses selesai, exit proses
 * Berikut hasil saat program dijalankan :
+
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal4/soal4tok.png" width="600">
+
 * Membuat file .txt
+
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal4/soal4buat.png" width="600">
 
 * Mengompres file .zip
 
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal4/soal4zip.png" width="600">
+
 * Menghapus file .txt
 
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal4/soal4hapus.png" width="600">
+
 * Mengekstrak file .zip
+
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal4/soal4unzip.png" width="600">
 
 ## Soal 5
 #### Pertanyaan :
@@ -1636,8 +1661,16 @@ void main()
 * Berikut hasil setelah program dijalankan
 * Stanby Mode
 
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal5/soal5standby.png" width="600">
+
 * Shop Mode
+
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal5/soal5shop.png" width="600">
 
 * Battle Mode
 
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal5/soal5battle.png" width="600">
+
 * Toko
+
+<img src="https://github.com/WasilatulDN/SoalShift_modul3_F02/blob/master/soal5/soal5toko.png" width="600">
